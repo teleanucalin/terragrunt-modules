@@ -58,7 +58,7 @@ module "sg_mysql" {
   security_group_id        = "dev01_mysql"
   enable_ingress_with_cidr = true
   ingress_ports            = [3306]
-  ingress_cidrs            = [data.aws_subnet.app.cidr_block, data.aws_subnet.web.cidr_block]
+  ingress_cidrs            = distinct(concat([for s in data.aws_subnet.app : s.cidr_block], [for s in data.aws_subnet.web : s.cidr_block]))
 }
 
 # data "aws_db_snapshot" "snapshot" {
