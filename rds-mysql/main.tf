@@ -13,7 +13,7 @@ data "aws_vpc" "main" {
    }
 }
 
-data "aws_subnet" "app" {
+data "aws_subnets" "app" {
    depends_on = [data.aws_vpc.main]
 
   filter {
@@ -26,7 +26,12 @@ data "aws_subnet" "app" {
    }
 }
 
-data "aws_subnet" "web" {
+data "aws_subnet" "app" {
+  for_each = toset(data.aws_subnets.app.ids)
+  id       = each.value
+}
+
+data "aws_subnets" "web" {
    depends_on = [data.aws_vpc.main]
 
   filter {
@@ -37,6 +42,11 @@ data "aws_subnet" "web" {
    tags = {
       Tier = "web"
    }
+}
+
+data "aws_subnet" "web" {
+  for_each = toset(data.aws_subnets.web.ids)
+  id       = each.value
 }
 
 data "aws_subnets" "data" {
