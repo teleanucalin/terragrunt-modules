@@ -28,6 +28,11 @@ variable "env_size" {
    }
 }*/
 
+variable "vpc_id" {}
+variable "app_subnet_cidr" {}
+variable "web_subnet_cidr" {}
+variable "data_subnet_cidr" {}
+
 variable "env_name" {
    type = string
    description = "The environment name; used when naming provisioned resources."
