@@ -1,4 +1,7 @@
 variable "vpc_id" {}
+variable "data_subnet_ids" {}
+variable "web_subnet_cidr" {}
+variable "app_subnet_cidr" {}
 # variable "db_snapshot_identifier" {
 #    type = string
 # }
