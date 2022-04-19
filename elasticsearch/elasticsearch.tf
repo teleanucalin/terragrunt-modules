@@ -1,19 +1,8 @@
 locals {
-   elasticsearch_sg_cidr_blocks  = flatten(concat(module.network.app_subnet_cidr, module.network.web_subnet_cidr, module.network.data_subnet_cidr ))
+   elasticsearch_sg_cidr_blocks  = flatten(concat(var.app_subnet_cidr, var.web_subnet_cidr, var.data_subnet_cidr ))
 }
 
-/*module "network" {
-   source = "../network"
-   
-   env_size        = var.env_size
-   env_name        = var.env_name
-   env_type        = var.env_type
-   region          = var.region
-   network_address = var.network_address
-}*/
-
 resource "aws_elasticsearch_domain" "this" {
-  depends_on  = [module.network]
   domain_name           = var.env_name
   elasticsearch_version = var.es_version
 
@@ -50,14 +39,6 @@ resource "aws_elasticsearch_domain" "this" {
   encrypt_at_rest {
     enabled = true
   }
-
-  /*vpc_options {
-    security_group_ids = [aws_security_group.elasticsearch.id]
-    subnet_ids         = slice(module.vpc_data.subnets_private, 0, min(var.instance_count, length(module.vpc_data.subnets_private) - 1))
-    // Pick up to #instance subgroups
-  }*/
-
-  // tags = var.tags
 }
 
 resource "aws_elasticsearch_domain_policy" "this" {
@@ -78,9 +59,8 @@ POLICIES
 }
 
 module "aws_security_group_elasticsearch" {
-  depends_on  = [module.network]
   source      = "../security-groups/sg_cidr"
-  vpc_id      = module.network.vpc_id
+  vpc_id      = var.vpc_id
   security_group_id        = "${var.env_name}-elasticsearch"
   ingress_ports            = [443]
   ingress_cidrs            = local.elasticsearch_sg_cidr_blocks
