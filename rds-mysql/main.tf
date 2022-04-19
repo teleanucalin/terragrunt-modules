@@ -6,69 +6,13 @@ locals {
    tier                          = "data"
 }
 
-data "aws_vpc" "main" {
-   id   = var.vpc_id
-   tags = {
-      Name = "${var.env_name}-core-network"
-   }
-}
-
-data "aws_subnets" "app" {
-   depends_on = [data.aws_vpc.main]
-
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.main.id]
-  }
-
-   tags = {
-      Tier = "app"
-   }
-}
-
-data "aws_subnet" "app" {
-  for_each = toset(data.aws_subnets.app.ids)
-  id       = each.value
-}
-
-data "aws_subnets" "web" {
-   depends_on = [data.aws_vpc.main]
-
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.main.id]
-  }
-
-   tags = {
-      Tier = "web"
-   }
-}
-
-data "aws_subnet" "web" {
-  for_each = toset(data.aws_subnets.web.ids)
-  id       = each.value
-}
-
-data "aws_subnets" "data" {
-   depends_on = [data.aws_vpc.main]
-
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.main.id]
-  }
-
-   tags = {
-      Tier = "data"
-   }
-}
-
 module "sg_mysql" {
   source                   = "../security-groups/sg_cidr"
-  vpc_id                   = data.aws_vpc.main.id
-  security_group_id        = "dev01_mysql"
+  vpc_id                   = var.vpc_id
+  security_group_id        = "${var.env_name}-mysql"
   enable_ingress_with_cidr = true
   ingress_ports            = [3306]
-  ingress_cidrs            = distinct(concat([for s in data.aws_subnet.app : s.cidr_block], [for s in data.aws_subnet.web : s.cidr_block]))
+  ingress_cidrs            = flatten(concat(var.app_subnet_cidr, var.web_subnet_cidr))
 }
 
 # data "aws_db_snapshot" "snapshot" {
@@ -338,11 +282,9 @@ resource "aws_db_parameter_group" "core_primary" {
 }
 
 resource "aws_db_subnet_group" "core" {
-   depends_on = [data.aws_subnets.data]
-
    name        = local.core_prefix
    description = "DB Subnet Group for ${local.core_prefix}"
-   subnet_ids  = toset(data.aws_subnets.data.ids)
+   subnet_ids  = toset(var.data_subnet_ids)
 
    tags = {
       Name  = local.core_prefix
