@@ -28,10 +28,18 @@ variable "env_size" {
    }
 }*/
 
-variable "vpc_id" {}
-variable "app_subnet_cidr" {}
-variable "web_subnet_cidr" {}
-variable "data_subnet_cidr" {}
+variable "vpc_id" {
+   type = string
+}
+variable "app_subnet_cidr" {
+   type = list(string)
+}
+variable "web_subnet_cidr" {
+   type = list(string)
+}
+variable "data_subnet_cidr" {
+   type = list(string)
+}
 
 variable "env_name" {
    type = string
