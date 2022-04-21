@@ -1,4 +1,4 @@
-/*variable "vpc_id" {
+variable "vpc_id" {
    type = string
 }
 variable "data_subnet_ids" {
@@ -10,7 +10,7 @@ variable "web_subnet_cidr" {
 variable "app_subnet_cidr" {
    type = list(string)
 }
-*/
+
 # variable "db_snapshot_identifier" {
 #    type = string
 # }
