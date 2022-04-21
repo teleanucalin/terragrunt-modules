@@ -5,7 +5,7 @@ locals {
    core_service_db_name          = "${local.core_prefix}-service"
    tier                          = "data"
 }
-/*
+
 module "sg_mysql" {
   source                   = "../security-groups/sg_cidr"
   vpc_id                   = var.vpc_id
@@ -20,7 +20,7 @@ module "sg_mysql" {
 #    include_shared = true
 #    snapshot_type  = "shared"
 # }
-*/
+
 resource "aws_db_parameter_group" "core_primary" {
    name        = local.core_primary_db_name
    description = "DB Parameter Group for ${local.core_primary_db_name}"
@@ -40,7 +40,7 @@ resource "aws_db_parameter_group" "core_primary" {
       Tier  = local.tier
    }
 }
-/*
+
 resource "aws_db_subnet_group" "core" {
    name        = local.core_prefix
    description = "DB Subnet Group for ${local.core_prefix}"
@@ -137,4 +137,4 @@ resource "aws_db_instance" "core_primary_readonly" {
       ]
    }
 }
-*/
+
