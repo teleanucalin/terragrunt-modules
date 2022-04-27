@@ -25,7 +25,6 @@ resource "aws_db_subnet_group" "core" {
 
 resource "aws_rds_cluster" "cluster" {
   allocated_storage                   = "100"
-  availability_zones                  = ["${var.region}a", "${var.region}b", "${var.region}c"]
   backup_retention_period             = "1"
   cluster_identifier                  = local.cluster_name
   db_subnet_group_name                = aws_db_subnet_group.core.name
