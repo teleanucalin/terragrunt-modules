@@ -3,7 +3,7 @@ locals {
   tier         = "data"
 }
 
-module "sg_mysql" {
+module "sg_aurora" {
   source                   = "../security-groups/sg_cidr"
   vpc_id                   = var.vpc_id
   security_group_id        = "${var.env_name}-mysql"
@@ -48,6 +48,7 @@ resource "aws_rds_cluster" "cluster" {
 
 resource "aws_rds_cluster_instance" "this" {
   count                                 = var.aurora_read_replica == "true" ? 2 : 1
+  cluster_identifier                    = aws_rds_cluster.cluster.id
   db_subnet_group_name                  = aws_db_subnet_group.core.name
   engine                                = "aurora-mysql"
   engine_version                        = "5.7.mysql_aurora.2.10.2"
