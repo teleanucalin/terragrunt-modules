@@ -54,8 +54,6 @@ resource "aws_rds_cluster_instance" "this" {
   engine_version                        = "5.7.mysql_aurora.2.10.2"
   identifier                            = "${local.cluster_name}-${count.index}"
   instance_class                        = var.env_size_instance_class[var.env_size]
-  port                                  = "3306"
-  storage_encrypted                     = "true"
 
   tags = {
       Name  = "${local.cluster_name}-${count.index}"
