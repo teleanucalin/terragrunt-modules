@@ -24,7 +24,8 @@ resource "aws_db_subnet_group" "core" {
 }
 
 resource "aws_rds_cluster" "cluster" {
-  backup_retention_period             = "1"
+  skip_final_snapshot                 = "true"
+  backup_retention_period             = "0"
   cluster_identifier                  = local.cluster_name
   db_subnet_group_name                = aws_db_subnet_group.core.name
   engine                              = "aurora-mysql"
