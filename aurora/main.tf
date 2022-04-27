@@ -14,11 +14,11 @@ module "sg_mysql" {
 
 resource "aws_db_subnet_group" "core" {
    name        = local.cluster_name
-   description = "DB Subnet Group for ${local.core_prefix}"
+   description = "DB Subnet Group for ${local.cluster_name}"
    subnet_ids  = toset(var.data_subnet_ids)
 
    tags = {
-      Name  = local.core_prefix
+      Name  = local.cluster_name
       Tier  = local.tier
    }
 }
