@@ -44,7 +44,7 @@ resource "aws_rds_cluster" "cluster" {
   vpc_security_group_ids = [module.sg_aurora.security_group_id]
 }
 
-
+/*
 resource "aws_rds_cluster_instance" "this" {
   count                                 = var.aurora_read_replica == "true" ? 2 : 1
   cluster_identifier                    = aws_rds_cluster.cluster.id
@@ -59,3 +59,4 @@ resource "aws_rds_cluster_instance" "this" {
       Tier  = local.tier
    }
 }
+*/
