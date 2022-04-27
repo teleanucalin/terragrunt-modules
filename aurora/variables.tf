@@ -44,6 +44,10 @@ variable "env_size" {
    }
 }
 
+variable "aurora_read_replica" {
+   type = string
+}
+
 variable "env_size_instance_class" {
   type    = map
   default = {
